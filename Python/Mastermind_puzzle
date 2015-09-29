@@ -1,0 +1,13 @@
+import string
+#Getting a secret number from the user and storing it.
+reference_string ="0123456789"
+
+
+# secret_number  = input("Please enter the secret number: ")
+# print("You have entered " + str(secret_number) + " as your secret number.")
+
+a_list = ['a', 'b', 'c', 'd', 'e', 'f']
+print a_list[0:3]
+
+for i in range(1, 3):
+    print i

@@ -1,1 +1,13 @@
-print("Alhamdhulillah")
+class sumly(object):
+    def __init__(self, a, b):
+        self.x = a
+        self.y = b
+
+    def sum(self):
+        result = self.x + self.y
+        print (str(result))
+
+x = sumly(10, 20)
+x.sum()
+x.x = 40
+x.sum()

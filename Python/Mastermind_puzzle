@@ -1,13 +1,103 @@
-import string
-#Getting a secret number from the user and storing it.
-reference_string ="0123456789"
+__author__ = 'imscreed'
+
+import os
+#Change the following values to modify the game rules!
+LENGTH_OF_SECRET_NUMBER = 5
+ATTEPMTS_ALLOWED = 3
+
+class Mastermind:
+
+    # Function to get Input from User
+    def getSecretNumber(self):
+        secret_number = input("Please input a "+str(LENGTH_OF_SECRET_NUMBER)+" digit number :")
+        userInput = str(secret_number)
+        SECRET_NUMBER_ARRAY = list(userInput)
+        length_of_secret_number = len(SECRET_NUMBER_ARRAY)
+
+        if length_of_secret_number < LENGTH_OF_SECRET_NUMBER or length_of_secret_number > LENGTH_OF_SECRET_NUMBER: # Check length of user input
+            print "RULE: "+str(LENGTH_OF_SECRET_NUMBER)+" DIGIT NUMBER ONLY ALLOWED!"
+            self.getSecretNumber()
+            return
+        else:
+            self.isRepeated(SECRET_NUMBER_ARRAY) # Check for repeated numbers in user input
+            return
+
+    # Check for repetition in the given string
+    def isRepeated(self, player_input):
+        number_of_repeated_strings = 0
+        tempArray = []
+        number_of_user_guesses = 0;
+        i = 0;
+
+        for value in player_input:
+            i += 1
+            if value not in tempArray:
+                tempArray.append(value)
+
+            if i == len(player_input) and len(tempArray) != len(player_input) and number_of_repeated_strings == 0:
+                number_of_repeated_strings = 1
+
+        if number_of_repeated_strings == 0:
+            os.system("CLS")
+            self.getPlayerGuess(player_input, number_of_user_guesses)
+        else:
+            print "RULE: REPETITION IS NOT ALLOWED!"
+            self.getSecretNumber()
+            return
+
+    #Retreive Player Guesses
+    def getPlayerGuess(self, player_input_array, number_of_guesses_expired):
+        playerInputString = ''.join(player_input_array)
+        if number_of_guesses_expired < ATTEPMTS_ALLOWED:
+            matched_numbers = 0
+            unmatched_numbers = 0
+            playerGuess = input("What is the Secret Number ? : ")
+            guessInput = str(playerGuess)
+
+            if guessInput == '1':
+                print "~~~~~UH OH! YOU LOST!, You made "+str(number_of_guesses_expired)+" attempt(s)~~~~~"
+                print "*****THE SECRET NUMBER IS :"+playerInputString+ " *****"
+                raw_input("Press ENTER to exit")
+            else:
+                guessInputArray = list(guessInput)
+                correctMatches = set(player_input_array).intersection(set(guessInputArray))
+                length_of_correct_matches = len(correctMatches)
+                correctMatchesNotMatched = len(guessInputArray)- length_of_correct_matches
+
+            for key, matchArray in enumerate(player_input_array):
+                if key < len(guessInputArray):
+                    if player_input_array[key] == guessInputArray[key]:
+                        matched_numbers += 1
+                    else:
+                        unmatched_numbers += 1
+                else:
+                    unmatched_numbers += 1
+
+            if matched_numbers == len(player_input_array):
+                print "*****OH YEAH! YOU WON!*****"
+            else:
+                number_of_guesses_expired += 1
+                if number_of_guesses_expired < ATTEPMTS_ALLOWED:
+                    print str(matched_numbers)+" NUMBER(S) IN CORRECT POSITION, "+str(unmatched_numbers)+" NUMBER(S) NOT IN CORRECT POSITION"
+                    print str(length_of_correct_matches)+" NUMBER(S) MATCHED, "+str(correctMatchesNotMatched)+" NUMBER(S) DID NOT MATCH"
+                    print "YOU ONLY HAVE "+str(ATTEPMTS_ALLOWED - number_of_guesses_expired)+" MORE ATTEMPT(S)"
+                    print "GUESS AGAIN! INPUT '1' TO END"
+                    self.getPlayerGuess(player_input_array,number_of_guesses_expired)
+                else:
+                    self.displayErrorMessage(playerInputString,ATTEPMTS_ALLOWED)
+        else:
+            self.displayErrorMessage(playerInputString,ATTEPMTS_ALLOWED)
+        return
+
+    def displayErrorMessage(self,message,maxGuessVal):
+        print "~~~~~YOU LOSE JIM! YOU ONLY HAVE "+str(maxGuessVal)+" GUESSES~~~~~"
+        print "*****THE SECRET NUMBER IS : "+str(message)+"*****"
+        raw_input("Press ENTER to Exit")
+        return
 
 
-# secret_number  = input("Please enter the secret number: ")
-# print("You have entered " + str(secret_number) + " as your secret number.")
+MASTERMIND = Mastermind()
+input = MASTERMIND.getSecretNumber()
 
-a_list = ['a', 'b', 'c', 'd', 'e', 'f']
-print a_list[0:3]
 
-for i in range(1, 3):
-    print i
+
